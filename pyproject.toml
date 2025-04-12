@@ -1,10 +1,11 @@
 [project]
 name = "tripo-mcp"
-version = "0.1.1"
+version = "0.1.2"
 description = "MCP (Model Control Protocol) integration for Tripo"
 authors = [
     {name = "Allen Dang", email = "allen@vastai3d.com"},
     {name = "pookiefoof", email = "caoyanpei@gmail.com"},
+    {name = "Ding Liang", email = "liangding@vastai3d.com"},
 ]
 license = {text = "MIT"}
 readme = "README.md"
@@ -19,7 +20,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "aiohttp>=3.11.13",
+    "tripo3d>=0.2.0",
     "mcp[cli]>=1.4.1",
 ]
 

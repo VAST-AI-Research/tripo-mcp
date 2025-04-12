@@ -23,7 +23,29 @@ Tripo MCP provides an interface between AI assistants and [Tripo AI](https://www
 
 2. Configure the MCP server in Claude Desktop or Cursor.
 
-3. Happy creating in 3D! E.g., "Generate a 3D model of a futuristic chair".
+    * `pip install uv`
+    * set mcp in cursor
+    ```json
+    {
+      "mcpServers": {
+        "tripo-mcp": {
+          "command": "uv",
+          "args": [
+            "tripo-mcp"
+          ]
+        }
+      }
+    }
+    ```
+
+    * Then you will get a green dot like this:
+      ![img](succeed.jpg)
+
+### Usage
+
+1. Enable Tripo AI Blender Addon and start blender mcp server.
+
+2. Chat using cursor or claude. E.g., "Generate a 3D model of a futuristic chair".
 
 ## Acknowledgements
 

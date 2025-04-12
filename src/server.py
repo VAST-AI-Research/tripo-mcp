@@ -26,8 +26,7 @@ This file is based on work by Siddharth Ahuja, with additional contributions
 for Tripo MCP functionality.
 """
 
-from mcp.server.fastmcp import FastMCP, Context, Image
-import os
+from mcp.server.fastmcp import FastMCP, Context
 import sys
 from pathlib import Path
 from typing import Dict, Any
@@ -46,7 +45,7 @@ logger = logging.getLogger("BlenderMCPServer")
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tripo_api import TripoClient, TaskStatus
+from tripo3d import TripoClient, TaskStatus
 
 
 @dataclass
@@ -876,6 +875,7 @@ async def get_task_status(task_id: str) -> Dict[str, Any]:
         if task.status == TaskStatus.SUCCESS and task.output:
             result.update(
                 {
+                    "base_model_url": task.output.base_model,
                     "model_url": task.output.model,
                     "pbr_model_url": task.output.pbr_model,
                     "rendered_image_url": task.output.rendered_image,
