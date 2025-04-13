@@ -72,3 +72,5 @@ dmypy.json
 *.log
 *.sqlite
 *.db
+
+uv.lock

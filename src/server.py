@@ -717,7 +717,7 @@ def asset_creation_strategy() -> str:
 
 @mcp.tool()
 async def create_3d_model_from_text(
-    describe_the_look_of_object: str, face_limit: int = 8000
+    describe_the_look_of_object: str, face_limit: int = -1
 ) -> Dict[str, Any]:
     """
     Create a 3D model from a text description using the Tripo API.
@@ -757,8 +757,6 @@ async def create_3d_model_from_text(
         # Create a text-to-model task
         task_id = await client.text_to_model(
             prompt=describe_the_look_of_object,
-            texture=True,
-            pbr=True,
             face_limit=face_limit,
         )
 
@@ -775,6 +773,70 @@ async def create_3d_model_from_text(
             "important_note": "3D model generation takes 3-5 minutes. You need to repeatedly call get_task_status until completion.",
             "workflow": [
                 "1. You've completed this step by calling create_3d_model_from_text",
+                "2. Now call get_task_status with task_id: " + task_id,
+                "3. If status is not SUCCESS, wait and call get_task_status again",
+                "4. When status is SUCCESS, use the pbr_model_url from the response",
+            ],
+        }
+
+
+@mcp.tool()
+async def create_3d_model_from_image(
+    image: str, face_limit: int = -1
+) -> Dict[str, Any]:
+    """
+    Create a 3D model from an image using the Tripo API.
+
+    IMPORTANT: This tool initiates a 3D model generation task but does NOT wait for completion.
+    After calling this tool, you MUST repeatedly call the get_task_status tool with the returned
+    task_id until the task status is SUCCESS or a terminal error state.
+
+    Typical workflow:
+    1. Call create_3d_model_from_image to start the task
+    2. Get the task_id from the response
+    3. Call get_task_status with the task_id
+    4. If status is not SUCCESS, wait a moment and call get_task_status again
+    5. Repeat until status is SUCCESS or a terminal error state
+    6. When status is SUCCESS, use the pbr_model_url from the response
+
+    Args:
+        image: The local path or url to the image file.
+        face_limit: The maximum number of faces in the model.
+        auto_size: Whether to automatically size the model.
+
+    Returns:
+        A dictionary containing the task ID and instructions for checking the status.
+    """
+    # Get the API key from environment variable
+    # api_key = os.environ.get("TRIPO_API_KEY")
+    get_blender_connection()
+    api_key = _tripo_apikey
+    if not api_key:
+        raise ValueError(
+            "It may take some more time to correctly re-enter the tripo function. You can first check the scene and then try the tripo function again later"
+        )
+
+    # Create the Tripo client
+    async with TripoClient(api_key=api_key) as client:
+        # Create a text-to-model task
+        task_id = await client.image_to_model(
+            image=image,
+            face_limit=face_limit,
+        )
+
+        # Get initial task status
+        task = await client.get_task(task_id)
+
+        # Return immediately with task ID and status
+        return {
+            "task_id": task_id,
+            "status": str(task.status),
+            "progress": task.progress,
+            "message": "Task created successfully. The 3D model generation is in progress.",
+            "next_step": "You MUST now call get_task_status with this task_id to check progress.",
+            "important_note": "3D model generation takes 3-5 minutes. You need to repeatedly call get_task_status until completion.",
+            "workflow": [
+                "1. You've completed this step by calling create_3d_model_from_image",
                 "2. Now call get_task_status with task_id: " + task_id,
                 "3. If status is not SUCCESS, wait and call get_task_status again",
                 "4. When status is SUCCESS, use the pbr_model_url from the response",
@@ -846,7 +908,6 @@ async def get_task_status(task_id: str) -> Dict[str, Any]:
     # Get the API key from environment variable
     # api_key = os.environ.get("TRIPO_API_KEY")
     get_blender_connection()
-    blender = get_blender_connection()
     api_key = _tripo_apikey
     if not api_key:
         raise ValueError(
