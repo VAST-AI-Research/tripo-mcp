@@ -29,7 +29,7 @@ Tripo MCP provides an interface between AI assistants and [Tripo AI](https://www
     {
       "mcpServers": {
         "tripo-mcp": {
-          "command": "uv",
+          "command": "uvx",
           "args": [
             "tripo-mcp"
           ]
