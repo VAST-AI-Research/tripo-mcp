@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/vast-ai-research-tripo-mcp-badge.png)](https://mseep.ai/app/vast-ai-research-tripo-mcp)
+
 # Tripo MCP Server
 
 Tripo MCP provides an interface between AI assistants and [Tripo AI](https://www.tripo3d.ai) via [Model Context Protocol (MCP)](https://github.com/anthropics/anthropic-cookbook/tree/main/mcp). 
